@@ -1,0 +1,6 @@
+org\mycompany\myname\Servlet\EnterServlet.class
+org\mycompany\myname\realization\Lists.class
+org\mycompany\myname\Servlet\RegServlet.class
+org\mycompany\myname\accounts\UserProfile.class
+org\mycompany\myname\accounts\AccountService.class
+org\mycompany\myname\Servlet\MyServlet.class
