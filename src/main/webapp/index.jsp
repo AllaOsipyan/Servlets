@@ -14,7 +14,7 @@
         <title>MyServlet</title>
     </head>
     <body>
-        <form action="authorization" method="delete">
+        <form action="authorization" method="get">
             <input type="submit" value="Выход">
         </form>
         <div>
