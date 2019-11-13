@@ -1,4 +1,3 @@
-org\mycompany\myname\realization\UsersSession.class
 org\mycompany\myname\Servlet\EnterServlet.class
 org\mycompany\myname\database\Executor.class
 org\mycompany\myname\database\ResultHandler.class
@@ -7,5 +6,4 @@ org\mycompany\myname\accounts\UsersDAO.class
 org\mycompany\myname\realization\Lists.class
 org\mycompany\myname\Servlet\RegServlet.class
 org\mycompany\myname\accounts\UserProfile.class
-org\mycompany\myname\accounts\UserProfile2.class
 org\mycompany\myname\Servlet\MyServlet.class

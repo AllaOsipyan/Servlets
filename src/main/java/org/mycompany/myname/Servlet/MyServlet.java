@@ -1,17 +1,14 @@
 
 package org.mycompany.myname.Servlet;
 
-import org.mycompany.myname.accounts.UsersDAO;
 import org.mycompany.myname.accounts.UserProfile;
 import org.mycompany.myname.database.DBService;
 import org.mycompany.myname.realization.Lists;
-import org.mycompany.myname.realization.UsersSession;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 
 public class MyServlet extends HttpServlet {
     DBService dbService = new DBService();
@@ -23,7 +20,7 @@ public class MyServlet extends HttpServlet {
 
         String sessionId = req.getSession().getId();
         UserProfile profile = null;
-        profile = UsersSession.getUserBySessionId(sessionId);
+        profile = dbService.getBySession(sessionId);
 
         if (profile == null){
             req.getRequestDispatcher("/authorization.html").forward(req, resp);

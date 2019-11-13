@@ -54,6 +54,14 @@ public class DBService {
             return dataSet;
 
     }
+    public UserProfile getBySession(String sessionId)  {
+        Session session = sessionFactory.openSession();
+        UsersDAO dao = new UsersDAO(session);
+        UserProfile dataSet = dao.getUserBySessionId(sessionId);
+        session.close();
+        return dataSet;
+
+    }
 
     public boolean addUser(UserProfile userProfile) {
         Session session = sessionFactory.openSession();
@@ -64,4 +72,23 @@ public class DBService {
         session.close();
         return isAdded;
     }
+
+    public void addSession(String sessionId, UserProfile userProfile) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        UsersDAO dao = new UsersDAO(session);
+        dao.addSessionId(sessionId,userProfile);
+        transaction.commit();
+        session.close();
+    }
+
+    public void deleteSession(String sessionId) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        UsersDAO dao = new UsersDAO(session);
+        dao.deleteSessionId(sessionId);
+        transaction.commit();
+        session.close();
+    }
+
 }
