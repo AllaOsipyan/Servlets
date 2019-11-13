@@ -1,8 +1,9 @@
 package org.mycompany.myname.Servlet;
 
-import org.mycompany.myname.accounts.AccountService;
+import org.mycompany.myname.accounts.UsersDAO;
 import org.mycompany.myname.accounts.UserProfile;
-import org.mycompany.myname.database.DBConnection;
+import org.mycompany.myname.database.DBService;
+import org.mycompany.myname.realization.UsersSession;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,47 +12,39 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 @WebServlet("/authorization")
 public class EnterServlet extends HttpServlet {
-    AccountService accountService = new AccountService();
+    DBService dbService = new DBService();
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-            String login = req.getParameter("login");
-            String pass = req.getParameter("pass");
+        String login = req.getParameter("login");
+        String pass = req.getParameter("pass");
         UserProfile user = null;
-        try {
-            user = accountService.getUserByLogin(login);
+        user = dbService.getUser(login);
 
-            if (user == null){
-                        req.getRequestDispatcher("/registration.jsp").forward(req, resp);
-                        return;
-            }
+        if (user == null){
+            req.setAttribute("error", "Please register");
+            getServletContext().getRequestDispatcher("/registration.jsp").forward(req, resp);
+            return;
+        }
 
-            if (!pass.equals(user.getPass())){
-                req.getRequestDispatcher("/authorization.html").forward(req, resp);
-               return;
-            }
+        if (!pass.equals(user.getPass())){
+            req.getRequestDispatcher("/authorization.html").forward(req, resp);
+           return;
+        }
 
-            accountService.addSession(req.getSession().getId(),user);
-            String path = "http://localhost:8080/?path=c:\\filemanager\\"+login;
-            resp.sendRedirect(new String(path.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8));
-        } catch (SQLException e) {
-        e.printStackTrace();
-    }
+        UsersSession.addSession(req.getSession().getId(),user);
+        String path = "http://localhost:8080/?path=c:\\filemanager\\"+login;
+        resp.sendRedirect(new String(path.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8));
     }
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        try {
-            accountService.deleteSession(req.getSession().getId());
+        UsersSession.deleteSession(req.getSession().getId());
 
-            req.getRequestDispatcher("/authorization.html").forward(req, resp);
-        } catch (SQLException e) {
-        e.printStackTrace();
-    }
+        req.getRequestDispatcher("/authorization.html").forward(req, resp);
     }
 }
