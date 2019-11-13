@@ -15,8 +15,6 @@ import java.sql.SQLException;
 
 @WebServlet("/registration")
 public class RegServlet extends HttpServlet {
-
-    DBService dbService = new DBService();
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -34,10 +32,14 @@ public class RegServlet extends HttpServlet {
         return;
         }
 
-        if(dbService.addUser(new UserProfile(login, pass, email))){
-            req.setAttribute("error", "Login already exists");
-            getServletContext().getRequestDispatcher("/registration.jsp").forward(req, resp);
-            return;
+        try {
+            if(UsersDAO.addNewUser(new UserProfile(login, pass, email))){
+                req.setAttribute("error", "Login already exists");
+                getServletContext().getRequestDispatcher("/registration.jsp").forward(req, resp);
+                return;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
 

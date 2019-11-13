@@ -1,25 +1,27 @@
 package org.mycompany.myname.database;
 
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.mycompany.myname.accounts.UsersDAO;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Executor {
-    public void execUpdate(Connection connection, String update) throws SQLException {
-        Statement stmt = connection.createStatement();
-        stmt.execute(update);
-        stmt.close();
-    }
-
-    public <T> T execQuery(Connection connection, String query, ResultHandler<T> handler) throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.execute(query);
-        ResultSet result = statement.getResultSet();
-        T value = handler.handle(result);
-        result.close();
-        statement.close();
+    DBService dbService =new DBService();
+    SessionFactory sessionFactory = dbService.getSessionFactory();
+    public <T> T exec(ResultHandler<T> handler) throws SQLException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        T value = handler.handle(session);
+        transaction.commit();
+        session.close();
         return value;
     }
 }

@@ -2,6 +2,7 @@
 package org.mycompany.myname.Servlet;
 
 import org.mycompany.myname.accounts.UserProfile;
+import org.mycompany.myname.accounts.UsersDAO;
 import org.mycompany.myname.database.DBService;
 import org.mycompany.myname.realization.Lists;
 
@@ -9,10 +10,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 
 public class MyServlet extends HttpServlet {
-    DBService dbService = new DBService();
-
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -20,7 +20,11 @@ public class MyServlet extends HttpServlet {
 
         String sessionId = req.getSession().getId();
         UserProfile profile = null;
-        profile = dbService.getBySession(sessionId);
+        try {
+            profile = UsersDAO.getUserBySessionId(sessionId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         if (profile == null){
             req.getRequestDispatcher("/authorization.html").forward(req, resp);
